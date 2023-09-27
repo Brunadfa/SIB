@@ -145,7 +145,7 @@ class Dataset:
         else:
             self.X[np.isnan(self.X)] = value
 
-    def remove_by_index(self, index)
+    def remove_by_index(self, index):
         """
             Remove uma amostra do conjunto de dados com base no seu índice.
 
@@ -164,9 +164,22 @@ class Dataset:
         self.X = np.delete(self.X, index, axis=0)
         self.y = np.delete(self.y, index)
 
+
 if __name__ == '__main__':
-    X = np.array([[1,2,3], [4,5,6]])
-    y = np.array([1,0])
-    data = Dataset(X=X, y=y)
-    metrics = data.summary()
-    print(metrics)
+    x = np.array([[1, 2, 3],
+                  [4, 5, 6]])
+    y = np.array([1, 2])
+    features = ['A', 'B', 'C']
+    label = 'y'
+    dataset = Dataset(X=x, y=y, features=features, label=label) # S
+    dataset_naosuperv = Dataset(X=x, y=None, features=features, label=label) # NS
+    print("[S] Shape: ", dataset.shape())
+    print("[S] É supervisionado: ", dataset.has_label())
+    print("[NS] É supervisionado: ", dataset_naosuperv.has_label())
+    print("[S] Classes: ", dataset.get_classes())
+    # print(dataset.get_mean())
+    # print(dataset.get_variance())
+    # print(dataset.get_median())
+    # print(dataset.get_min())
+    # print(dataset.get_max())
+    print("[S] Summary:\n", dataset.summary())
