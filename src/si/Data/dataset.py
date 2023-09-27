@@ -45,28 +45,69 @@ class Dataset:
         return self.X.shape
 
     def has_label(self):
+        """
+        Verifica se o dataset é supervisionado (tem labels (vetor y)) ou não supervisionado (não tem labels).
+
+        return: Booleano: True se tem label; False se não tem label.
+        """
         if self.y is None:
             return False
 
     def get_classes(self):
+        """
+        Retorna as classes do dataset.
+
+        return: Lista com os valores únicos do dataset.
+        """
         return np.unique(self.y)
 
     def get_mean(self):
-        means = np.nanmean(self.X, axis=0) #coluna é o e linha é 1
+        """
+        Calcula a média de cada feature.
+
+        return: Array com as médias das features.
+        """
+        means = np.nanmean(self.X, axis=0) #coluna é 0 e linha é 1
 
     def get_variance(self):
+
+        """
+        Calcula a variância de cada feature.
+
+        return: Array com as variâncias das features.
+        """
         return np.nanvar(self.X, axis=0)
 
     def get_median(self):
+        """
+        Calcula a mediana de cada feature.
+
+        return: Array com as medianas das features.
+        """
         return np.nanmedian(self.X, axis=0)
 
     def get_min(self):
+        """
+        Calcula o mínimo.
+
+        return: Lista com os valores mínimos das features.
+        """
         return np.nanmin(self.X, axis=0)
 
     def get_max(self):
+        """
+        Calcula o máximo de cada feature.
+
+        return: Lista com os valores máximos das features.
+        """
         return np.nanmax(self.X, axis=0)
 
     def summary(self):
+        """
+        Cria um dataframe com os valores do summary (média, mediana, variância, mínimo e máximo) das features.
+
+        return: Pandas dataframe com o summary das features.
+        """
         metrics = {"mean": self.get_mean(),
                    "media": self.get_median(),
                    "var": self.get_variance(),
@@ -77,6 +118,10 @@ class Dataset:
         return data
 
     def dropna(self):
+
+        """
+        Remove observações que contenham pelo menos um valor nulo (NaN).
+        """
         #Procurar os índices das linhas (amostras) que contêm valores NaN em qualquer caraterística
         nan_indices = np.isnan(self.X).any(axis=1)
 
@@ -85,6 +130,12 @@ class Dataset:
         self.y = self.y[~nan_indices]
 
     def fillna(self, value="mean"):
+        """
+        Substitui os valores nulos.
+
+        param value: float or "mean" or "median"
+        """
+
         if value == "mean":
             feature_means = np.nanmean(self.X, axis=0)
             self.X[np.isnan(self.X)] = feature_means[np.isnan(self.X)]
@@ -94,7 +145,19 @@ class Dataset:
         else:
             self.X[np.isnan(self.X)] = value
 
-    def remove_by_index(self, index):
+    def remove_by_index(self, index)
+        """
+            Remove uma amostra do conjunto de dados com base no seu índice.
+
+            Parâmetros:
+            ----------
+            index : int
+                O índice da amostra a ser removida. Deve estar dentro do intervalo [0, len(self.X)).
+
+            return
+            ------
+            ValueError : se o índice estiver fora do intervalo válido.
+        """
         if index < 0 or index >= len(self.X):
             raise ValueError("Index invalido. O índice deve estar dentro do intervalo de amostras disponíveis")
 
