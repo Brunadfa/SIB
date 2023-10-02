@@ -1,5 +1,4 @@
 from typing import Tuple, Union
-from typing import Callable
 import numpy as np
 from scipy import stats
 
@@ -7,7 +6,7 @@ from SIB.src.si.Data.dataset import Dataset
 
 
 def f_classification(dataset: Dataset) -> Union[Tuple[np.ndarray, np.ndarray],
-                                                Tuple[float, float]]:
+Tuple[float, float]]:
     """
     Scoring function for classification problems. It computes one-way ANOVA F-value for the
     provided dataset. The F-value scores allows analyzing if the mean between two or more groups (factors)

@@ -1,7 +1,8 @@
 import numpy as np
 from typing import Callable
 from SIB.src.si.Data.dataset import Dataset
-from SIB.src.statistics import f_classification
+from SIB.src.statistics.f_classification import f_classification
+
 
 class SelectPercentile:
     """
@@ -22,7 +23,8 @@ class SelectPercentile:
         p: array, shape (n_features,)
             p-values of F-scores
         """
-    def __init__(self, score_func: Callable = f_classification, k: int = 10, percentile: int = 10):
+
+    def __init__(self, score_func: Callable = f_classification, percentile: int = 10):
         """
         Construtor
 
@@ -32,7 +34,6 @@ class SelectPercentile:
         if percentile > 100 or percentile < 0:
             raise ValueError("Your percentile must be between 0 and 100")
 
-        self.k = k
         self.percentile = percentile
         self.score_func = score_func
         self.F = None
@@ -54,8 +55,8 @@ class SelectPercentile:
         """
         len_features = len(dataset.features)
         features_percentile = int(
-            len_features * (self.percentile / 100)    #calcula o nº de features selecionadas com F score
-    # mais alto até ao valor do percentile indicado (50% de 10 features equivale a 5 features)
+            len_features * (self.percentile / 100)  # calcula o nº de features selecionadas com F score
+            # mais alto até ao valor do percentile indicado (50% de 10 features equivale a 5 features)
         )
         idxs = np.argsort(self.F)[-self.percentile:]
         features = np.array(dataset.features)[idxs]
@@ -78,7 +79,6 @@ class SelectPercentile:
         self.F, self.p = self.score_func(dataset)
         return self
 
-
     def fit_transform(self, dataset: Dataset) -> Dataset:
         """
         Method that executes the fit method and then the transform method.
@@ -97,19 +97,18 @@ class SelectPercentile:
         return self.transform(dataset)
 
 
-
 if __name__ == '__main__':
     dataset = Dataset(X=np.array([[0, 2, 0, 3],
                                   [0, 1, 4, 3],
                                   [0, 1, 1, 3]]),
-                      Y=np.array([0, 1, 0]),
+                      y=np.array([0, 1, 0]),
                       features=["f1", "f2", "f3", "f4"],
                       label="y")
-     #dataset = read_csv('C:\Users\Bruna\PycharmProjects\pythonSIB2\SIB\src\si\IO\iris.csv', sep=",", label=True)
-    select = SelectPercentile(f_classification,
-                              percentile=25)  # chamar o método f_classification p/ o cálculo e introduzir valor de
+
+    # dataset = read_csv('C:\Users\Bruna\PycharmProjects\pythonSIB2\SIB\src\si\IO\iris.csv', sep=",", label=True)
+    select = SelectPercentile(percentile=50)
+    # chamar o método f_classification p/ o cálculo e introduzir valor de
     # percentile (em percentagem)
     select = select.fit(dataset)
     dataset = select.transform(dataset)
-    print(dataset)
     print(dataset.features)
