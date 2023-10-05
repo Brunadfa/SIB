@@ -1,5 +1,5 @@
 import pandas as pd
-from SIB.src.si.Data.dataset import Dataset
+from src.si.Data.dataset import Dataset
 
 
 def read_csv(filename: str,

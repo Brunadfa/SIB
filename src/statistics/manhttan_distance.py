@@ -1,3 +1,4 @@
+from typing import List
 
 
 def manhattan_distance(x, y):
@@ -22,10 +23,8 @@ def manhattan_distance(x, y):
     return distances
 
 if __name__ == '__main__':
-    from SIB.src.statistics.manhattan_distance import manhattan_distance
-# Example usage:
-x = [1, 2, 3]
-y = [[4, 5, 6], [7, 8, 9], [10, 11, 12]]
+    x = [1, 2, 3]
+    y = [[4, 5, 6], [7, 8, 9], [10, 11, 12]]
 
 distances = manhattan_distance(x, y)
 print(distances)  # Output: [9, 27, 45]

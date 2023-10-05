@@ -7,8 +7,3 @@ __maintainer__ = "João Correia"
 __email__ = "jfscorreia95@gmail.com"
 __coauthoremail__ = "pg51187@uminho.pt"
 
-# -----------------------------------------------------------------------------------
-# This package is heavily inspired and adapted from
-# - https://github.com/vmspereira/si
-# - https://github.com/cruz-f/si
-# -----------------------------------------------------------------------------------

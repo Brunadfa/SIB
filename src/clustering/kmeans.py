@@ -2,8 +2,8 @@ from typing import Callable
 
 import numpy as np
 
-from SIB.src.si.data.dataset import Dataset
-from SIB.src.si.statistics.euclidean_distance import euclidean_distance
+from src.si.Data.dataset import Dataset
+from src.statistics.euclidean_distance import euclidean_distance
 
 
 class KMeans:
@@ -215,7 +215,7 @@ class KMeans:
 
 
 if __name__ == '__main__':
-    from SIB.src.si.data.dataset import Dataset
+    from src.si.Data.dataset import Dataset
     dataset_ = Dataset.from_random(100, 5)
 
     k_ = 3

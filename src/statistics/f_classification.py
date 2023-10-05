@@ -2,7 +2,7 @@ from typing import Tuple, Union
 import numpy as np
 from scipy import stats
 
-from SIB.src.si.Data.dataset import Dataset
+from src.si.Data.dataset import Dataset
 
 
 def f_classification(dataset: Dataset) -> Union[Tuple[np.ndarray, np.ndarray],
