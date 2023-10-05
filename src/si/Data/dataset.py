@@ -1,10 +1,4 @@
-import numpy as np
-import pandas as pd
-from typing import List
-
-
-
-from typing import Tuple, Sequence, Union
+from typing import Tuple, Sequence
 
 import numpy as np
 import pandas as pd
@@ -41,7 +35,7 @@ class Dataset:
         self.features = features
         self.label = label
 
-    def shape(self) -> Tuple[int, int]:
+    def shape(self) -> tuple[int, ...]:
         """
         Returns the shape of the dataset
         Returns
@@ -204,88 +198,6 @@ class Dataset:
         y = np.random.randint(0, n_classes, n_samples)
         return cls(X, y, features=features, label=label)
 
-
-if __name__ == '__main__':
-    X = np.array([[1, 2, 3], [4, 5, 6]])
-    y = np.array([1, 2])
-    features = np.array(['a', 'b', 'c'])
-    label = 'y'
-    dataset = Dataset(X, y, features, label)
-    print(dataset.shape())
-    print(dataset.has_label())
-    print(dataset.get_classes())
-    print(dataset.get_mean())
-    print(dataset.get_variance())
-    print(dataset.get_median())
-    print(dataset.get_min())
-    print(dataset.get_max())
-    print(dataset.summary())
-
-    def dropna(self):
-
-        """
-        Remove observações que contenham pelo menos um valor nulo (NaN).
-        """
-        # Procurar os índices das linhas (amostras) que contêm valores NaN em qualquer caraterística
-        nan_indices = np.isnan(self.X).any(axis=1)
-
-        # Remover as linhas com valores NaN da matriz de características (X) e atualizar o vetor y
-        self.X = self.X[~nan_indices]
-        self.y = self.y[~nan_indices]
-
-    def fillna(self, value="mean"):
-        """
-        Substitui os valores nulos.
-
-        param value: float or "mean" or "median"
-        """
-
-        if value == "mean":
-            feature_means = np.nanmean(self.X, axis=0)
-            self.X[np.isnan(self.X)] = feature_means[np.isnan(self.X)]
-        elif value == "median":
-            feature_medians = np.nanmedian(self.X, axis=0)
-            self.X[np.isnan(self.X)] = feature_medians[np.isnan(self.X)]
-        else:
-            self.X[np.isnan(self.X)] = value
-
-    def remove_by_index(self, index):
-        """
-            Remove uma amostra do conjunto de dados com base no seu índice.
-
-            Parâmetros:
-            ----------
-            index : int
-                O índice da amostra a ser removida. Deve estar dentro do intervalo [0, len(self.X)).
-
-            return
-            ------
-            ValueError : se o índice estiver fora do intervalo válido.
-        """
-        if index < 0 or index >= len(self.X):
-            raise ValueError("Index invalido. O índice deve estar dentro do intervalo de amostras disponíveis")
-
-        self.X = np.delete(self.X, index, axis=0)
-        self.y = np.delete(self.y, index)
-
-if __name__ == '__main__':
-    x = np.array([[1, 2, 3],
-                  [4, 5, 6]])
-    y = np.array([1, 2])
-    features = ['A', 'B', 'C']
-    label = 'y'
-    dataset = Dataset(X=x, y=y, features=features, label=label)  # S
-    dataset_naosuperv = Dataset(X=x, y=None, features=features, label=label)  # NS
-    print("[S] Shape: ", dataset.shape())
-    print("[S] É supervisionado: ", dataset.has_label())
-    print("[NS] É supervisionado: ", dataset_naosuperv.has_label())
-    print("[S] Classes: ", dataset.get_classes())
-    # print(dataset.get_mean())
-    # print(dataset.get_variance())
-    # print(dataset.get_median())
-    # print(dataset.get_min())
-    # print(dataset.get_max())
-    print("[S] Summary:\n", dataset.summary())
 
 def dropna(self):
 
