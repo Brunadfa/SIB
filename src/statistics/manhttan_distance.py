@@ -27,4 +27,4 @@ if __name__ == '__main__':
     y = [[4, 5, 6], [7, 8, 9], [10, 11, 12]]
 
 distances = manhattan_distance(x, y)
-print(distances)  # Output: [9, 27, 45]
+print(distances)

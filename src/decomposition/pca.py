@@ -1,6 +1,5 @@
 import numpy as np
 
-from si.Data.dataset import Dataset
 from src.si.Data.dataset import Dataset
 
 
