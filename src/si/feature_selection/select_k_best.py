@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Callable
 from src.si.Data.dataset import Dataset
-from src.statistics.f_classification import f_classification
+from src.si.statistics.f_classification import f_classification
 
 class SelectKBest:
 

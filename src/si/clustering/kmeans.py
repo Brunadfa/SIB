@@ -3,7 +3,7 @@ from typing import Callable
 import numpy as np
 
 from src.si.Data.dataset import Dataset
-from src.statistics.euclidean_distance import euclidean_distance
+from src.si.statistics import euclidean_distance
 
 
 class KMeans:
