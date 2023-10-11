@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Callable
-from src.si.Data.dataset import Dataset
-from src.si.statistics.f_classification import f_classification
+from si.Data.dataset import Dataset
+from si.statistics.f_classification import f_classification
 
 
 class SelectPercentile:

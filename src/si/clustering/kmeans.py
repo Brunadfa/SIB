@@ -215,7 +215,7 @@ class KMeans:
 
 
 if __name__ == '__main__':
-    from src.si.Data.dataset import Dataset
+    from si.Data.dataset import Dataset
     dataset_ = Dataset.from_random(100, 5)
 
     k_ = 3

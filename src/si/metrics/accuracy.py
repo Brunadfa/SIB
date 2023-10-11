@@ -1,14 +1,21 @@
 import numpy as np
 
-def accuracy(y_true: np.ndarray, y_pred:np.ndarray) -> float:
+
+def accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
-       Método que calcula o valor do erro entre os valores reais e valores estimados de Y.
+    It returns the accuracy of the model on the given dataset
 
-       :param y_true: valores/labels reais do dataset.
-       :param y_pred: valores/labels estimados do dataset.
+    Parameters
+    ----------
+    y_true: np.ndarray
+        The true labels of the dataset
+    y_pred: np.ndarray
+        The predicted labels of the dataset
 
-       :return: Valor do erro entre o y_true e o y_pred -> accuracy do modelo
-       """
+    Returns
+    -------
+    accuracy: float
+        The accuracy of the model
+    """
     return np.sum(y_true == y_pred) / len(y_true)
-
 

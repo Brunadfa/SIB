@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.si.Data.dataset import Dataset
+from si.Data.dataset import Dataset
 
 
 class VarianceThreshold:
@@ -89,7 +89,7 @@ class VarianceThreshold:
 
 
 if __name__ == '__main__':
-    from si.data.dataset import Dataset
+    from si.Data.dataset import Dataset
 
     dataset = Dataset(X=np.array([[0, 2, 0, 3],
                                   [0, 1, 4, 3],

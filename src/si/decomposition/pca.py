@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.si.Data.dataset import Dataset
+from si.Data.dataset import Dataset
 
 
 class PCA:
