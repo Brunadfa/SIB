@@ -1,6 +1,5 @@
 import numpy as np
 
-
 from si.Data.dataset import Dataset
 from si.metrics.mse import mse
 
@@ -140,7 +139,7 @@ if __name__ == '__main__':
     dataset_ = Dataset(X=X, y=y)
 
     # fit the model
-    model = RidgeRegressionLeastSquares(alpha=2.0)   #nao percebi esta parte
+    model = RidgeRegressionLeastSquares(l2_penalty=2.0)   #o prof tinha alpha, mas não é esse parametro
     model.fit(dataset_)
     print(model.theta)
     print(model.theta_zero)
