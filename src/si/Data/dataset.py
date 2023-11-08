@@ -1,4 +1,4 @@
-from typing import Tuple, Sequence
+from typing import Sequence
 
 import numpy as np
 import pandas as pd
@@ -207,7 +207,7 @@ def dropna(self):
     #Procurar os índices das linhas (amostras) que contêm valores NaN em qualquer caraterística
     nan_indices = np.isnan(self.X).any(axis=1)
 
-   # Remover as linhas com valores NaN da matriz de características (X) e atualizar o vetor y
+    # Remover as linhas com valores NaN da matriz de características (X) e atualizar o vetor y
     self.X = self.X[~nan_indices]
     self.y = self.y[~nan_indices]
 

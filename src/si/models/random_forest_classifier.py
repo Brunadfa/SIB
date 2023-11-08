@@ -11,13 +11,11 @@ class RandomForestClassifier:
     """
        A class representing a Random Forest classifier.
 
-       Parameters:
-           n_estimators (int): The number of decision trees to use in the ensemble.
-           max_features (int): The maximum number of features to use per tree. If None, it defaults to sqrt(n_features).
-           min_sample_split (int): The minimum number of samples required to split an internal node.
-           max_depth (int): The maximum depth of the decision trees in the ensemble.
-           mode (Literal['gini', 'entropy']): The impurity calculation mode for information gain (either 'gini' or 'entropy').
-           seed (int): The random seed to ensure reproducibility.
+       Parameters: n_estimators (int): The number of decision trees to use in the ensemble. max_features (int): The
+       maximum number of features to use per tree. If None, it defaults to sqrt(n_features). min_sample_split (int):
+       The minimum number of samples required to split an internal node. max_depth (int): The maximum depth of the
+       decision trees in the ensemble. mode (Literal['gini', 'entropy']): The impurity calculation mode for
+       information gain (either 'gini' or 'entropy'). seed (int): The random seed to ensure reproducibility.
 
        Estimated Parameters:
            trees (list of tuples): List of decision trees and their respective features used for training.
@@ -32,6 +30,7 @@ class RandomForestClassifier:
            - score(dataset: Dataset) -> float:
                Computes the accuracy of the model's predictions on a dataset.
        """
+
     def __init__(self, n_estimators: int = 100, max_features: int = None, min_sample_split: int = 2,
                  max_depth: int = 10, mode: Literal['gini', 'entropy'] = 'gini', seed: int = None):
         self.n_estimators = n_estimators
@@ -54,27 +53,20 @@ class RandomForestClassifier:
                 """
         if self.seed is not None:
             np.random.seed(self.seed)
+        n_samples, n_features = dataset.shape()
+        if self.max_features is None:
+            self.max_features = int(np.sqrt(n_features))
+        for x in range(self.n_estimators):
+            bootstrap_samples = np.random.choice(n_samples, n_samples,
+                                                 replace=True)
+            bootstrap_features = np.random.choice(n_features, self.max_features,
+                                                  replace=False)
+            random_dataset = Dataset(dataset.X[bootstrap_samples][:, bootstrap_features], dataset.y[bootstrap_samples])
 
-        n_samples, n_features = dataset.X.shape
-        self.max_features = int(np.sqrt(n_features)) if self.max_features is None else self.max_features
-
-        for _ in range(self.n_estimators):
-            # Create a bootstrap dataset
-            sample_indices = np.random.choice(n_samples, n_samples, replace=True)
-            feature_indices = np.random.choice(n_features, self.max_features, replace=False)
-            bootstrap_dataset = Dataset(X=dataset.X[sample_indices][:, feature_indices],
-                                         y=dataset.y[sample_indices],
-                                         features=dataset.features[feature_indices],
-                                         label=dataset.label)
-
-            # Create and train a decision tree
-            tree = DecisionTreeClassifier(min_sample_split=self.min_sample_split,
-                                          max_depth=self.max_depth,
+            tree = DecisionTreeClassifier(min_sample_split=self.min_sample_split, max_depth=self.max_depth,
                                           mode=self.mode)
-            tree.fit(bootstrap_dataset)
-
-            # Append the features used and the trained tree
-            self.trees.append((feature_indices, tree))
+            tree.fit(random_dataset)
+            self.trees.append((bootstrap_features, tree))
 
         return self
 
@@ -88,19 +80,27 @@ class RandomForestClassifier:
                 Returns:
                     np.ndarray: The predicted labels.
 
-                Note:
-                    The predictions are obtained by aggregating the predictions of individual decision trees in the ensemble.
-                """
-        predictions = []
-        for x in dataset.X:
-            tree_predictions = []
-            for feature_indices, tree in self.trees:
-                x_subset = x[feature_indices]
-                subset_dataset = Dataset(X=[x_subset], features=dataset.features, label=dataset.label)
-                tree_predictions.append(tree.predict(subset_dataset))
-            most_common_prediction = max(set(tree_predictions), key=tree_predictions.count)
-            predictions.append(most_common_prediction)
-        return np.array(predictions)
+                Note: The predictions are obtained by aggregating the predictions of individual decision trees in the
+                ensemble.
+        """
+        n_samples = dataset.shape()[0]
+        predictions = np.zeros((self.n_estimators, n_samples), dtype=object)
+
+        # for each tree
+        row = 0
+        for features, tree in self.trees:
+            tree_preds = tree.predict(dataset)
+            predictions[row, :] = tree_preds
+            row += 1
+
+        def majority_vote(sample_predictions):
+            unique_classes, counts = np.unique(sample_predictions, return_counts=True)
+            most_common = unique_classes[np.argmax(counts)]
+            return most_common
+
+        majority_prediction = np.apply_along_axis(majority_vote, axis=0, arr=predictions)
+
+        return majority_prediction
 
     def score(self, dataset: Dataset) -> float:
         """
@@ -117,3 +117,17 @@ class RandomForestClassifier:
                 """
         predictions = self.predict(dataset)
         return accuracy(dataset.y, predictions)
+
+
+if __name__ == '__main__':
+    from si.IO.CSV import read_csv
+    from si.model_selection.split import train_test_split
+
+    filename = r'C:\Users\bruna\PycharmProjects\SIB\datasets\iris\iris.csv'
+
+    data = read_csv(filename, sep=",", features=True, label=True)
+    train, test = train_test_split(data, test_size=0.33, random_state=42)
+    model = RandomForestClassifier(n_estimators=10000, max_features=4, min_sample_split=2, max_depth=5, mode='gini',
+                                   seed=42)
+    model.fit(train)
+    print(model.score(test))
