@@ -53,24 +53,21 @@ def stratified_train_test_split(dataset, test_size, random_state=None):
         Returns:
         - Tuple: A tuple containing the stratified train and test Dataset objects.
         """
-    if not 0 < test_size < 1:
-        raise ValueError("test_size should be a float between 0 and 1.")
+    np.random.seed(random_state)
 
-    if random_state is not None:
-        np.random.seed(random_state)
+    unique_labels, counts = np.unique(dataset.y,
+                                      return_counts=True)
+    train_idx = []
+    test_idx = []
+    for label, count in zip(unique_labels,
+                            counts):
+        test_samples = int(count * test_size)
+        label_indexes = np.where(dataset.y == label)[0]
+        np.random.shuffle(label_indexes)
+        test_idx.extend(label_indexes[:test_samples])
+        train_idx.extend(label_indexes[test_samples:])
 
-    unique_labels, label_counts = np.unique(dataset.y, return_counts=True)
-    train_indices, test_indices = [], []
-
-    for label in unique_labels:
-        label_indices = np.where(dataset.y == label)[0]
-        num_test_samples = int(label_counts[label] * test_size)
-
-        shuffled_indices = np.random.permutation(label_indices)
-        test_indices.extend(shuffled_indices[:num_test_samples])
-        train_indices.extend(shuffled_indices[num_test_samples:])
-
-    train_dataset = Dataset(X=dataset.X[train_indices], y=dataset.y[train_indices])
-    test_dataset = Dataset(X=dataset.X[test_indices], y=dataset.y[test_indices])
+    train_dataset = Dataset(dataset.X[train_idx], dataset.y[train_idx], features=dataset.features, label=dataset.label)
+    test_dataset = Dataset(dataset.X[test_idx], dataset.y[test_idx], features=dataset.features, label=dataset.label)
 
     return train_dataset, test_dataset
