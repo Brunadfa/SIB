@@ -90,9 +90,13 @@ class Dropout(Layer):
 
 
 if __name__ == '__main__':
+    # Create a Dropout layer with a probability of 0.5 (you can adjust this)
     dropout_layer = Dropout(probability=0.5)
+    # Generate a random input for testing
     random_input = np.random.rand(5, 5)
+    # Perform forward propagation during training mode
     output_training = dropout_layer.forward_propagation(random_input, training=True)
+    # Perform forward propagation during inference mode
     output_inference = dropout_layer.forward_propagation(random_input, training=False)
 
     print("Random Input:")
