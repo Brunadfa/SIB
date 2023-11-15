@@ -144,12 +144,12 @@ class SigmoidActivation(ActivationLayer):
 
 class ReLUActivation(ActivationLayer):
     """
-    ReLU activation function.
+    ReLUactivation function.
     """
 
     def activation_function(self, input: np.ndarray):
         """
-        ReLU activation function.
+        ReLUactivation function.
 
         Parameters
         ----------
