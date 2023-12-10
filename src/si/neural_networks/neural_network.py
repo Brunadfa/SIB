@@ -41,9 +41,9 @@ class NeuralNetwork:
         # arguments
         self.epochs = epochs
         self.batch_size = batch_size
-        self.optimizer = optimizer
+        self.optimizer = optimizer(learning_rate=learning_rate, **kwargs)
         self.verbose = verbose
-        self.loss = loss
+        self.loss = loss()
         self.metric = metric
 
         # attributes
@@ -52,7 +52,7 @@ class NeuralNetwork:
 
     def add(self, layer: Layer) -> 'NeuralNetwork':
         """
-        Add a layer to the neural network.
+        Add a layer to the neural network, set input shape and inicialize, if needed.
 
         Parameters
         ----------
@@ -74,7 +74,7 @@ class NeuralNetwork:
     def _get_mini_batches(self, X: np.ndarray, y: np.ndarray = None,
                           shuffle: bool = True) -> Iterator[Tuple[np.ndarray, np.ndarray]]:
         """
-        Generate mini-batches for the given data.
+        Generate mini-batches for the given data. Used in train of NN
 
         Parameters
         ----------
@@ -91,7 +91,7 @@ class NeuralNetwork:
             The mini-batches.
         """
         n_samples = X.shape[0]
-        indices = np.arange(n_samples)
+        indices = np.arange(n_samples)  # creates a 0 matrix with sample indexes
         assert self.batch_size <= n_samples, "Batch size cannot be greater than the number of samples"
         if shuffle:
             np.random.shuffle(indices)
@@ -100,7 +100,6 @@ class NeuralNetwork:
                 yield X[indices[start:start + self.batch_size]], y[indices[start:start + self.batch_size]]
             else:
                 yield X[indices[start:start + self.batch_size]], None
-
     def _forward_propagation(self, X: np.ndarray, training: bool) -> np.ndarray:
         """
         Perform forward propagation on the given input.
@@ -142,9 +141,22 @@ class NeuralNetwork:
         return error
 
     def fit(self, dataset: Dataset) -> 'NeuralNetwork':
+        """
+        Fit the model to the dataset
+
+        Parameters
+        ----------
+        dataset: Dataset
+            The dataset to fit the model to
+
+        Returns
+        -------
+        self: NeuralNetwork
+            The fitted model
+        """
         X = dataset.X
         y = dataset.y
-        if np.ndim(y) == 1:
+        if np.ndim(y) == 1:  #expandir as dimensoes do y 1 [[0],[1]]
             y = np.expand_dims(y, axis=1)
 
         self.history = {}
@@ -156,17 +168,17 @@ class NeuralNetwork:
                 # Forward propagation
                 output = self._forward_propagation(X_batch, training=True)
                 # Backward propagation
-                error = self.loss.derivative(y_batch, output)
-                self._backward_propagation(error)
+                error = self.loss.derivative(y_batch, output)  # a derivdada do erro entre o previsto e o erro
+                self._backward_propagation(error)  #para ajustar os pesos
 
-                output_x_.append(output)
-                y_.append(y_batch)
+                output_x_.append(output)  #outputs dos mini-bacthes
+                y_.append(y_batch)  #labels dos mini.bacthes
 
             output_x_all = np.concatenate(output_x_)
             y_all = np.concatenate(y_)
 
             # compute loss
-            loss = self.loss.loss(y_all, output_x_all)
+            loss = self.loss.loss(y_all, output_x_all)  #calculates total loss
 
             if self.metric is not None:
                 metric = self.metric(y_all, output_x_all)
@@ -178,7 +190,7 @@ class NeuralNetwork:
             # save loss and metric for each epoch
             self.history[epoch] = {'loss': loss, 'metric': metric}
 
-            if self.verbose:
+            if self.verbose:  #checks in printing if on
                 print(f"Epoch {epoch}/{self.epochs} - loss: {loss:.4f} - {metric_s}")
 
         return self
