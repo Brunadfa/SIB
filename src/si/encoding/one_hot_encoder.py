@@ -135,7 +135,7 @@ class OneHotEncoder:
 
 if __name__ == '__main__':
     # Example
-    data = ['abc', 'def', 'ghi']
+    data = ['abc', 'aabb', 'ghi']
     encoder = OneHotEncoder(padder=' ', max_length=5)
     encoded_data = encoder.fit_transform(data)
     print("Encoded Data:")
