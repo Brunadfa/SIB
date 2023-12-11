@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     data = read_csv(filename, sep=",", features=True, label=True)
     train, test = train_test_split(data, test_size=0.33, random_state=42)
-    model = RandomForestClassifier(n_estimators=10000, max_features=4, min_sample_split=2, max_depth=5, mode='gini',
+    model = RandomForestClassifier(n_estimators=1000, max_features=4, min_sample_split=2, max_depth=5, mode='gini',
                                    seed=42)
     model.fit(train)
     print(model.score(test))
